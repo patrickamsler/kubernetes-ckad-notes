@@ -1,19 +1,20 @@
 # Kubernetes
 
 ## API Primitives 
-Kubernetes defines objects such as nodes and pods 
+Get information about Kubernetes objects
 ```bash
+kubectl get <object>
 kubectl get pods 
 kubectl get nodes 
 ```
-* Spec the desired state of an object (yaml) 
+* Spec defines the requested state of an object (yaml) 
 * State: the actual state which not necessarily matches the spec 
 
-Print spec and status in yaml format: `kubectl get nodes $node_name -o yaml`
-Information about an object: `kubectl describe node $node_name`
+* Print spec and status in yaml format: `kubectl get nodes $node_name -o yaml`
+* Information about the object: `kubectl describe node $node_name`
 
 ## Pods 
-Runs one or more container. Usually only one. 
+Runs one or more container. Typically only a single container per pod. See multi container pods
 Example yaml for a pod: 
 
 ```yaml
@@ -45,13 +46,13 @@ Execute command in the container: `kubectl exec my-pod -- ls`
 
 Get the container's logs: `kubectl logs counter`
 
-For a multi-container pod, specify which container to get logs for using the -c flag: `kubectl logs <pod name> -c <container name>`
+For a multi-container pods you have to specify the container with the -c flag: `kubectl logs <pod name> -c <container name>`
 
 It is possible to download the pod spec. Useful if edit doesn't work and the pod has to be recreated: `kubectl get pod nginx -n nginx-ns -o yaml --export > nginx-pod.yml`
 
 ## Namespaces 
 
-Separate applications or teams within the same cluster. If you don't specify a namespace, the object gets created in the default namespace. 
+Separates applications or teams within the same cluster. If you don't specify a namespace, the object gets created in the default namespace. 
 
 You can get a list of the namespaces in the cluster like this: `kubectl get namespaces`
 
@@ -110,7 +111,7 @@ spec:
 ## Security Context 
 Commands/processes inside the container run as root user by default. If a mounted file from the node is accessed inside the container, the file is access with root user rights. If we want to run a container with the right of a specific user or group, we can specify this in the container spec. 
 
-Access the file with the rights of user with the id 2001 
+Access the file with the rights of the user identified by id 2001 
 ```yaml
 spec: 
   securityContext: 
@@ -123,7 +124,7 @@ spec:
 ```
 
 ## Resources 
-If a pod is created, the node is scheduler selects the node based on the requested resources in the container spec. If the specified limits are reached, the pod will be evicted.
+If a pod is created, the node scheduler selects the node based on the requested resources in the container spec. If the specified limits are reached, the pod will be evicted.
 
 ### CPU
 Limits and requests for CPU resources are measured in cpu units. One cpu, in Kubernetes, is equivalent to:
@@ -187,7 +188,7 @@ spec:
 
 ## Liveness and Readiness Probes
 ### Livness
-Indicates whether the Container is running. If the liveness probe fails, the kubelet kills the Container, and the Container is subjected to its restart policy.
+Indicates whether the container is running. If the liveness probe fails, the kubelet kills the container, and the container is subjected to its restart policy.
 
 Livness probe with command
 ```yaml
@@ -206,7 +207,7 @@ spec:
 ```
 
 ### Readiness
-Indicates whether the Container is ready to service requests. If the readiness probe fails, the endpoints controller removes the Pod’s IP address from the endpoints of all Services 
+Indicates whether the container is ready to service requests. If the readiness probe fails, the endpoints controller removes the Pod’s IP address from the endpoints of all services. 
 
 Readiness HTTP probe
 ```yaml
@@ -354,7 +355,7 @@ kubectl get endpoints my-servic
 
 
 ## Jobs and Cronjobs
-* Jobs provide a way in Kubernetes to start a pod once until and run it until completion
+* Jobs provide a way in Kubernetes to start a pod once and run it until completion
 * Cronjobs are similar to unix cron jobs. They start a pod in a specific interval
 
 ```bash
@@ -363,7 +364,7 @@ kubectl get cronjobs
 ```
 
 ## Network Policy
-By default, pods or not isolated and accept traffic from any source. Network policies provide a way to restrict traffic to certain pods.
+By default, pods are not isolated and accept traffic from any source. Network policies provide a way to restrict traffic to certain pods.
 
 ```yaml
 apiVersion: networking.k8s.io/v1
@@ -457,7 +458,7 @@ spec:
       storage: 512Mi
 ```
 
-The references then the PersistentVolumeClaim
+A Pod uses the PersistentVolumeClaim to mount storage
 ```yaml
 kind: Pod
 apiVersion: v1

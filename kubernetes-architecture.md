@@ -5,10 +5,10 @@
 Manage, plan, schedule and monitor nodes.
 
 ## Node
-Host applications as containers.
+Hosts applications as containers.
 
 ## etcd
-Key-value store that contains the information about the cluster such as the desired and actual state.
+Key-value store that contains information about the cluster such as the desired and actual state.
 
 ## kube-scheduler
 Identifies the right node to place the container based on the containers requirements, nodes capacity and other constraints.
